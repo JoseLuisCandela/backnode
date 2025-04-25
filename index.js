@@ -39,7 +39,7 @@ app.patch("/update_conversation", updateConversationHandler);
 app.post("/login", loginHandler);
 app.post("/register", registerHandler);
 app.get("/get_conversations", getConversationsHandler);
-app.post("/save_conversation", saveConversationHandler);
+
 app.delete("/delete_conversation", deleteConversationHandler);
 app.post("/search_chunks", searchChunksHandler);
 app.get("/get_pdfs", getPdfsHandler);
