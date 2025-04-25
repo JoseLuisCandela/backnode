@@ -4,7 +4,7 @@ import multer from "multer";
 import dotenv from "dotenv";
 import uploadPdfHandler from "./upload_pdf.js";
 import renameChatHandler from "./rename_chat.js";
-import pdfParse from 'pdf-parse';
+import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 import updateConversationHandler from "./update_conversation.js";
 // ... importa más handlers si tienes
 
