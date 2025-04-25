@@ -3,7 +3,7 @@ import multer from 'multer';
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
-import pdfParse from 'pdf-parse';
+import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 
 const router = express.Router();
 const upload = multer({ dest: 'tmp/' });

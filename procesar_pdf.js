@@ -1,6 +1,6 @@
 // procesar_pdf.js
 const fs = require("fs");
-const pdfParse = require("pdf-parse");
+const pdfParse = require("pdf-parse/lib/pdf-parse.js");
 const axios = require("axios");
 
 const SUPABASE_URL = "https://jhutdencubufyjuvtnwx.supabase.co";

@@ -2,7 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
-const pdfParse = require("pdf-parse");
+const pdfParse = require("pdf-parse/lib/pdf-parse.js");
 const { supabaseRequest, SUPABASE_URL, SUPABASE_API_KEY } = require("./db");
 
 const app = express();
