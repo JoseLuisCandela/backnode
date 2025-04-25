@@ -5,9 +5,7 @@ import crypto from "crypto";
 
 
 
-const express = require('express');
-const crypto = require('crypto');
-const axios = require('axios');
+;
 const router = express.Router();
 
 // Configuración de Supabase

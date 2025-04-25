@@ -4,9 +4,7 @@ import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import axios from "axios";
 import { supabaseRequest } from "./db.js"; // Asegúrate de que esta función esté exportada correctamente
 
-const fs = require("fs");
-const pdfParse = require("pdf-parse/lib/pdf-parse.js");
-const axios = require("axios");
+
 
 const SUPABASE_URL = "https://jhutdencubufyjuvtnwx.supabase.co";
 const SUPABASE_API_KEY = process.env.SUPABASE_API_KEY; // tu Supabase key

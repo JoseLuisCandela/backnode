@@ -1,8 +1,6 @@
 import express from "express";
 import axios from "axios";
 
-const express = require('express');
-const axios = require('axios');
 const router = express.Router();
 
 // Configuración de Supabase

@@ -2,9 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import supabaseRequest from './db.js';
-const express = require("express");
-const cors = require("cors");
-const { supabaseRequest } = require("./db");
+
 
 const app = express();
 app.use(cors());

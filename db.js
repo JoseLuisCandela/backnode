@@ -1,4 +1,5 @@
-const axios = require("axios");
+import axios from "axios";
+
 
 // URL y API Key de tu proyecto Supabase
 const SUPABASE_URL = process.env.SUPABASE_URL;

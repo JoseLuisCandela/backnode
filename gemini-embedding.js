@@ -1,5 +1,5 @@
 import axios from "axios";
-const axios = require("axios");
+
 
 /**
  * Genera embedding usando la API de Gemini
