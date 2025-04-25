@@ -4,7 +4,7 @@ const pdfParse = require("pdf-parse");
 const axios = require("axios");
 
 const SUPABASE_URL = "https://jhutdencubufyjuvtnwx.supabase.co";
-const SUPABASE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."; // tu Supabase key
+const SUPABASE_API_KEY = process.env.SUPABASE_API_KEY; // tu Supabase key
 const GEMINI_API_KEY = "AIzaSyAbHrkEBJ0Gebu0o4Hai9Oow9RNyJvZUaM"; // tu Gemini API Key
 
 const PDF_PATH = "./archivo.pdf"; // ruta al PDF local

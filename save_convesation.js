@@ -4,7 +4,7 @@ const router = express.Router();
 
 // Configuración de Supabase
 const SUPABASE_URL = 'https://jhutdencubufyjuvtnwx.supabase.co';
-const SUPABASE_API_KEY = 'TU_SUPABASE_API_KEY'; // Reemplaza con tu API key real
+const SUPABASE_API_KEY = process.env.SUPABASE_API_KEY; // Reemplaza con tu API key real
 
 // Ruta: POST /save-conversation
 router.post('/save-conversation', async (req, res) => {
