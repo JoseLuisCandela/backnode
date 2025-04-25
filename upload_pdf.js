@@ -1,18 +1,17 @@
-const express = require('express');
-const multer = require('multer');
-const axios = require('axios');
-const fs = require('fs');
-const path = require('path');
-const pdfParse = require('pdf-parse');
+import express from 'express';
+import multer from 'multer';
+import axios from 'axios';
+import fs from 'fs';
+import path from 'path';
+import pdfParse from 'pdf-parse';
 
 const router = express.Router();
 const upload = multer({ dest: 'tmp/' });
 
 const SUPABASE_URL = 'https://jhutdencubufyjuvtnwx.supabase.co';
-const SUPABASE_API_KEY = 'TU_SUPABASE_API_KEY'; // reemplaza con tu clave real
+const SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpodXRkZW5jdWJ1ZnlqdXZ0bnd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUzMTM5NjcsImV4cCI6MjA2MDg4OTk2N30.x2poq7U5ZlevM_6pxcT0lJfvGaD2XJ5AY-4xpXMWIP0'; // reemplaza por tu clave real
 const GEMINI_API_KEY = 'AIzaSyAbHrkEBJ0Gebu0o4Hai9Oow9RNyJvZUaM'; // reemplaza si quieres
 
-// Función para chunking simple
 function chunkText(text, maxTokens = 300) {
   const sentences = text.split(/(?<=[.?!])\s+/);
   const chunks = [];
@@ -31,7 +30,6 @@ function chunkText(text, maxTokens = 300) {
   return chunks;
 }
 
-// Llama a Gemini para embeddings
 async function generateEmbedding(text) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/embedding-001:embedText?key=${GEMINI_API_KEY}`;
   try {
@@ -56,7 +54,6 @@ router.post('/upload-pdf', upload.single('file'), async (req, res) => {
   const uniqueName = `${Date.now()}_${original}`;
   const bucket = 'pdfs';
 
-  // Subir a Supabase Storage
   try {
     const fileBuffer = fs.readFileSync(tmpPath);
     const uploadUrl = `${SUPABASE_URL}/storage/v1/object/${bucket}/${uniqueName}`;
@@ -69,7 +66,6 @@ router.post('/upload-pdf', upload.single('file'), async (req, res) => {
       },
     });
 
-    // Insertar en tabla pdfs
     await axios.post(`${SUPABASE_URL}/rest/v1/pdfs`, {
       filename: uniqueName,
       originalname: original,
@@ -83,15 +79,12 @@ router.post('/upload-pdf', upload.single('file'), async (req, res) => {
       }
     });
 
-    // Extraer texto
     const dataBuffer = fs.readFileSync(tmpPath);
     const pdfData = await pdfParse(dataBuffer);
     const text = pdfData.text;
 
-    // Guardar .txt local (opcional)
     fs.writeFileSync(`uploads/${uniqueName.replace('.pdf', '')}.txt`, text);
 
-    // Chunk + embeddings
     const chunks = chunkText(text);
     for (const chunk of chunks) {
       const embedding = await generateEmbedding(chunk);
@@ -112,7 +105,7 @@ router.post('/upload-pdf', upload.single('file'), async (req, res) => {
       });
     }
 
-    fs.unlinkSync(tmpPath); // borrar temporal
+    fs.unlinkSync(tmpPath);
     return res.json({ success: true, filename: uniqueName });
   } catch (err) {
     console.error(err.response?.data || err.message);
@@ -120,4 +113,4 @@ router.post('/upload-pdf', upload.single('file'), async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
