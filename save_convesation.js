@@ -1,0 +1,53 @@
+const express = require('express');
+const axios = require('axios');
+const router = express.Router();
+
+// Configuración de Supabase
+const SUPABASE_URL = 'https://jhutdencubufyjuvtnwx.supabase.co';
+const SUPABASE_API_KEY = 'TU_SUPABASE_API_KEY'; // Reemplaza con tu API key real
+
+// Ruta: POST /save-conversation
+router.post('/save-conversation', async (req, res) => {
+  const { userId, messages } = req.body;
+
+  if (!userId || !messages) {
+    return res.status(400).json({ success: false, error: 'Faltan datos' });
+  }
+
+  let parsedMessages;
+  try {
+    parsedMessages = typeof messages === 'string' ? JSON.parse(messages) : messages;
+    if (!Array.isArray(parsedMessages) || parsedMessages.length === 0) {
+      throw new Error('Mensajes inválidos');
+    }
+  } catch (err) {
+    return res.status(400).json({ success: false, error: 'Mensajes inválidos' });
+  }
+
+  const name = (parsedMessages[1]?.text || 'Sin título').substring(0, 100);
+
+  try {
+    const response = await axios.post(`${SUPABASE_URL}/rest/v1/conversations`, {
+      user_id: parseInt(userId),
+      name,
+      messages: JSON.stringify(parsedMessages)
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: SUPABASE_API_KEY,
+        Authorization: `Bearer ${SUPABASE_API_KEY}`,
+        Prefer: 'return=minimal'
+      }
+    });
+
+    if (response.status === 201) {
+      return res.json({ success: true });
+    } else {
+      return res.status(500).json({ success: false, error: 'Error al guardar en Supabase' });
+    }
+  } catch (error) {
+    return res.status(500).json({ success: false, error: 'Error al guardar en Supabase' });
+  }
+});
+
+module.exports = router;
