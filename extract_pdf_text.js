@@ -27,7 +27,7 @@ app.get("/extract_pdf_text", async (req, res) => {
 
   const filename = response.data[0].filename;
   const bucket = "pdfs";
-  const storageUrl = `${SUPABASE_URL}/storage/v1/object/${bucket}/${filename}`;
+  const storageUrl = `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${filename}`;
 
   try {
     const pdfBuffer = await axios.get(storageUrl, {
