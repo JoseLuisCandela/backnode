@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Configuración de Supabase
 const SUPABASE_URL = 'https://jhutdencubufyjuvtnwx.supabase.co';
-const SUPABASE_API_KEY = process.env.SUPABASE_API_KEY; // Reemplaza con tu API key real
+const SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpodXRkZW5jdWJ1ZnlqdXZ0bnd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUzMTM5NjcsImV4cCI6MjA2MDg4OTk2N30.x2poq7U5ZlevM_6pxcT0lJfvGaD2XJ5AY-4xpXMWIP0'; // Reemplaza con tu API key real
 
 // Ruta: POST /save-conversation
 router.post('/save-conversation', async (req, res) => {
