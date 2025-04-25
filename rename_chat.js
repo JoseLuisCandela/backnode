@@ -63,4 +63,4 @@ router.patch('/rename-chat', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
