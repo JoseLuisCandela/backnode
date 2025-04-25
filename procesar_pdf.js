@@ -1,4 +1,9 @@
 // procesar_pdf.js
+import fs from "fs";
+import pdfParse from "pdf-parse/lib/pdf-parse.js";
+import axios from "axios";
+import { supabaseRequest } from "./db.js"; // Asegúrate de que esta función esté exportada correctamente
+
 const fs = require("fs");
 const pdfParse = require("pdf-parse/lib/pdf-parse.js");
 const axios = require("axios");
