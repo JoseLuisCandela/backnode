@@ -3,7 +3,8 @@ import cors from "cors";
 import multer from "multer";
 import dotenv from "dotenv";
 import uploadPdfHandler from "./upload_pdf.js";
-import renameChatHandler from "./rename_chat.js";
+const renameChatHandler = require("./rename_chat.js");
+
 import updateConversationHandler from "./update_conversation.js";
 // ... importa más handlers si tienes
 
