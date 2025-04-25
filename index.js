@@ -5,13 +5,14 @@ import dotenv from "dotenv";
 import uploadPdfHandler from "./upload_pdf.js";
 import renameChatHandler from "./rename_chat.js";
 import pdfParse from 'pdf-parse/lib/pdf-parse.js';
+
 import updateConversationHandler from "./update_conversation.js";
 // ... importa más handlers si tienes
 
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 10000;
 app.use(uploadPdfHandler);
 app.use(cors());
 app.use(express.json());
