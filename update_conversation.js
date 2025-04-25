@@ -1,10 +1,11 @@
-const express = require('express');
-const axios = require('axios');
+import express from 'express';
+import axios from 'axios';
+
 const router = express.Router();
 
 // Configuración Supabase
 const SUPABASE_URL = 'https://jhutdencubufyjuvtnwx.supabase.co';
-const SUPABASE_API_KEY = 'TU_SUPABASE_API_KEY'; // reemplaza esto por tu clave real
+const SUPABASE_API_KEY = 'TU_SUPABASE_API_KEY'; // reemplaza con tu clave real
 
 router.patch('/update-conversation', async (req, res) => {
   const { id, messages } = req.body;
@@ -34,8 +35,12 @@ router.patch('/update-conversation', async (req, res) => {
     }
   } catch (err) {
     console.error(err.response?.data || err.message);
-    res.status(500).json({ success: false, message: "Error al actualizar", error: err.response?.data || "Error desconocido" });
+    res.status(500).json({
+      success: false,
+      message: "Error al actualizar",
+      error: err.response?.data || "Error desconocido"
+    });
   }
 });
 
-module.exports = router;
+export default router;
