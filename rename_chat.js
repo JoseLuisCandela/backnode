@@ -32,6 +32,7 @@ const supabaseRequest = async (method, table, data = null, query = null) => {
 
     return { status: response.status, data: response.data };
   } catch (err) {
+    console.error("❌ Error en supabaseRequest:", err.response?.data || err.message);
     return {
       status: err.response?.status || 500,
       data: err.response?.data || { error: err.message }
@@ -39,11 +40,14 @@ const supabaseRequest = async (method, table, data = null, query = null) => {
   }
 };
 
-// Ruta: PATCH /rename-chat
+// Ruta: PATCH /rename_chat
 router.patch('/rename_chat', async (req, res) => {
+  console.log("🛠️ PATCH /rename_chat body:", req.body);
+
   const { chatId, newName } = req.body;
 
   if (!chatId || !newName) {
+    console.error("❌ Faltan datos:", { chatId, newName });
     return res.status(400).json({ success: false, message: 'Faltan datos' });
   }
 
@@ -53,9 +57,12 @@ router.patch('/rename_chat', async (req, res) => {
     id: `eq.${chatId}`
   });
 
-  if (result.status === 204) {
+  console.log("📡 Resultado de Supabase:", result);
+
+  if (result.status === 200 || result.status === 204) {
     res.json({ success: true });
   } else {
+    console.error("❌ Falló al renombrar en Supabase:", result.data);
     res.status(500).json({
       success: false,
       message: 'Error al renombrar',
