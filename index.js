@@ -32,7 +32,7 @@ app.get("/", (_, res) => {
 // Rutas
 app.post("/upload_pdf", upload.single("file"), uploadPdfHandler);
 app.patch("/rename_chat", renameChatHandler);
-app.patch("/update_conversation", updateConversationHandler);
+app.post("/update_conversation", updateConversationHandler);
 app.post("/login", loginHandler);
 app.post("/register", registerHandler);
 app.get("/get_conversations", getConversationsHandler);
