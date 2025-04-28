@@ -9,7 +9,7 @@ import renameChatHandler from "./rename_chat.js";
 import updateConversationHandler from "./update_conversation.js";
 import loginHandler from "./login.js";
 import registerHandler from "./register.js";
-
+import getConversationsHandler from "./conversations/get_conversations.js";
 
 dotenv.config();
 
@@ -34,7 +34,7 @@ app.patch("/rename_chat", renameChatHandler);
 app.patch("/update_conversation", updateConversationHandler);
 app.post("/login", loginHandler);
 app.post("/register", registerHandler);
-
+app.get("/get_conversations", getConversationsHandler);
 
 app.listen(port, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${port}`);
