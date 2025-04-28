@@ -38,11 +38,6 @@ app.patch("/rename_chat", renameChatHandler);
 app.patch("/update_conversation", updateConversationHandler);
 app.post("/login", loginHandler);
 app.post("/register", registerHandler);
-app.get("/get_conversations", getConversationsHandler);
-
-app.delete("/delete_conversation", deleteConversationHandler);
-app.post("/search_chunks", searchChunksHandler);
-app.get("/get_pdfs", getPdfsHandler);
 
 app.listen(port, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${port}`);
