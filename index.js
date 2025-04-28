@@ -9,7 +9,7 @@ import renameChatHandler from "./rename_chat.js";
 import updateConversationHandler from "./update_conversation.js";
 import loginHandler from "./login.js";
 import registerHandler from "./register.js";
-import getConversationsHandler from "./conversations/get_conversations.js";
+import getConversationsHandler from "./get_conversations.js";
 
 dotenv.config();
 
