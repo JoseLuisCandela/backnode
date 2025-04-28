@@ -11,7 +11,7 @@ import loginHandler from "./login.js";
 import registerHandler from "./register.js";
 import getConversationsHandler from "./get_conversations.js";
 import saveConversationHandler from "./save_convesation.js";
-
+import updateConversationHandler from "./update_conversation.js";
 dotenv.config();
 
 const app = express();
@@ -37,6 +37,7 @@ app.post("/login", loginHandler);
 app.post("/register", registerHandler);
 app.get("/get_conversations", getConversationsHandler);
 app.post("/save_conversation", saveConversationHandler);
+app.patch("/update_conversation", updateConversationHandler);
 app.listen(port, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${port}`);
 });
