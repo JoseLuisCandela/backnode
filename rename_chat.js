@@ -40,7 +40,7 @@ const supabaseRequest = async (method, table, data = null, query = null) => {
 };
 
 // Ruta: PATCH /rename-chat
-router.patch('/rename-chat', async (req, res) => {
+router.patch('/rename_chat', async (req, res) => {
   const { chatId, newName } = req.body;
 
   if (!chatId || !newName) {
