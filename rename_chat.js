@@ -53,7 +53,7 @@ router.patch('/rename_chat', async (req, res) => {
     id: `eq.${chatId}`
   });
 
-  if (result.status === 204) {
+  if (result.status >= 200 && result.status < 300) {
     res.json({ success: true });
   } else {
     res.status(500).json({
