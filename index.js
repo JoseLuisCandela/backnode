@@ -12,7 +12,7 @@ import registerHandler from "./register.js";
 import getConversationsHandler from "./get_conversations.js";
 import saveConversationHandler from "./save_convesation.js";
 import deleteConversationHandler from "./delete_conversation.js";
-import renameChatHandler from "./rename_chat.js";
+
 
 
 dotenv.config();
@@ -41,7 +41,7 @@ app.post("/register", registerHandler);
 app.get("/get_conversations", getConversationsHandler);
 app.post("/save_conversation", saveConversationHandler);
 app.delete("/delete_conversation", deleteConversationHandler);
-app.patch("/rename_chat", renameChatHandler);
+
 
 app.listen(port, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${port}`);
