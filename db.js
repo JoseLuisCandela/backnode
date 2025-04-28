@@ -51,4 +51,4 @@ async function supabaseRequest(method, endpoint, data = null, query = null) {
   }
 }
 
-module.exports = { supabaseRequest };
+export default supabaseRequest;
