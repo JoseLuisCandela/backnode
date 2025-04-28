@@ -9,13 +9,7 @@ import renameChatHandler from "./rename_chat.js";
 import updateConversationHandler from "./update_conversation.js";
 import loginHandler from "./login.js";
 import registerHandler from "./register.js";
-import getConversationsHandler from "./get_conversations.js";
-// save_conversation.js
 
-
-import deleteConversationHandler from "./delete_conversation.js";
-import searchChunksHandler from "./search_chunks.js";
-import getPdfsHandler from "./get_pdfs.js";
 
 dotenv.config();
 
