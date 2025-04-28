@@ -37,7 +37,7 @@ app.post("/login", loginHandler);
 app.post("/register", registerHandler);
 app.get("/get_conversations", getConversationsHandler);
 app.post("/save_conversation", saveConversationHandler);
-app.post("/delete_conversation", deleteConversationHandler);
+app.delete("/delete_conversation", deleteConversationHandler);
 
 app.listen(port, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${port}`);
