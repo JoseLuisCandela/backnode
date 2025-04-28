@@ -1,25 +1,14 @@
-import express from "express";
-
 import axios from "axios";
 import crypto from "crypto";
 
-
-
-;
-const router = express.Router();
-
-// Configuración de Supabase
-const SUPABASE_URL = 'https://jhutdencubufyjuvtnwx.supabase.co';
+const SUPABASE_URL = "https://jhutdencubufyjuvtnwx.supabase.co";
 const SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpodXRkZW5jdWJ1ZnlqdXZ0bnd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUzMTM5NjcsImV4cCI6MjA2MDg4OTk2N30.x2poq7U5ZlevM_6pxcT0lJfvGaD2XJ5AY-4xpXMWIP0'; // reemplaza con tu API KEY
 
-const supabaseRequest = async (method, endpoint, data = null, query = null) => {
+async function supabaseRequest(method, endpoint, data = null, query = null) {
   let url = `${SUPABASE_URL}/rest/v1/${endpoint}`;
   if (query) {
-    const searchParams = new URLSearchParams();
-    for (const [key, value] of Object.entries(query)) {
-      searchParams.append(key, value);
-    }
-    url += `?${searchParams.toString()}`;
+    const params = new URLSearchParams(query);
+    url += `?${params.toString()}`;
   }
 
   try {
@@ -29,10 +18,10 @@ const supabaseRequest = async (method, endpoint, data = null, query = null) => {
       headers: {
         apikey: SUPABASE_API_KEY,
         Authorization: `Bearer ${SUPABASE_API_KEY}`,
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
+        "Content-Type": "application/json",
+        Accept: "application/json",
       },
-      data: data ? JSON.stringify(data) : null,
+      data,
     });
 
     return { status: response.status, data: response.data };
@@ -42,37 +31,34 @@ const supabaseRequest = async (method, endpoint, data = null, query = null) => {
       data: err.response?.data || { error: err.message },
     };
   }
-};
+}
 
-// Ruta: POST /register
-router.post('/register', async (req, res) => {
+export default async function registerHandler(req, res) {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.status(400).json({ success: false, error: 'Faltan datos' });
+    return res.status(400).json({ success: false, error: "Faltan datos" });
   }
 
-  const hashedPassword = crypto.createHash('md5').update(password).digest('hex');
+  const hashedPassword = crypto.createHash("md5").update(password).digest("hex");
 
-  const check = await supabaseRequest('GET', 'users', null, {
+  const check = await supabaseRequest("GET", "users", null, {
     username: `eq.${username}`,
-    select: 'id',
+    select: "id",
   });
 
   if (check.status === 200 && check.data.length > 0) {
-    return res.status(409).json({ success: false, error: 'El usuario ya existe' });
+    return res.status(409).json({ success: false, error: "El usuario ya existe" });
   }
 
-  const newUser = await supabaseRequest('POST', 'users', {
+  const newUser = await supabaseRequest("POST", "users", {
     username,
     password: hashedPassword,
   });
 
-  if (newUser.status === 201) {
+  if (newUser.status === 201 || newUser.status === 200) {
     res.json({ success: true });
   } else {
-    res.status(500).json({ success: false, error: 'Error al registrar usuario' });
+    res.status(500).json({ success: false, error: "Error al registrar usuario" });
   }
-});
-
-module.exports = router;
+}
