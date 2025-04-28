@@ -1,17 +1,11 @@
 import express from "express";
-import cors from "cors";
 import axios from "axios";
 import crypto from "crypto";
 
-
-
-const app = express();
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const router = express.Router();
 
 const SUPABASE_URL = "https://jhutdencubufyjuvtnwx.supabase.co";
-const SUPABASE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpodXRkZW5jdWJ1ZnlqdXZ0bnd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUzMTM5NjcsImV4cCI6MjA2MDg4OTk2N30.x2poq7U5ZlevM_6pxcT0lJfvGaD2XJ5AY-4xpXMWIP0"; // reemplazar con tu key real
+const SUPABASE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpodXRkZW5jdWJ1ZnlqdXZ0bnd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUzMTM5NjcsImV4cCI6MjA2MDg4OTk2N30.x2poq7U5ZlevM_6pxcT0lJfvGaD2XJ5AY-4xpXMWIP0";
 
 // Función para hacer peticiones a Supabase
 async function supabaseRequest(method, endpoint, data = null, query = null) {
@@ -43,8 +37,8 @@ async function supabaseRequest(method, endpoint, data = null, query = null) {
   }
 }
 
-// Endpoint de login
-app.post("/login", async (req, res) => {
+// Ruta para login
+router.post("/", async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
@@ -69,8 +63,4 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// Puerto
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor escuchando en http://localhost:${PORT}`);
-});
+export default router;
