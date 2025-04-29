@@ -1,5 +1,10 @@
 import supabaseRequest from "./db.js";
 
+/**
+ * Handler para obtener los PDFs de un usuario desde Supabase
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ */
 const getPdfsHandler = async (req, res) => {
   const { userId } = req.query;
 
