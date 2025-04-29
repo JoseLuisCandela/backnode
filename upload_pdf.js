@@ -88,8 +88,14 @@ export default async function uploadPdfHandler(req, res) {
     // 🧠 Procesamiento del PDF y generación de embeddings
     const pdfData = await pdfParse(fileBuffer);
     const text = pdfData.text;
-    const chunks = chunkText(text);
 
+    // 🔽 Guardar el texto en un archivo .txt en /tmp
+    const txtFilename = uniqueName.replace('.pdf', '') + '.txt';
+    const txtPath = `/tmp/${txtFilename}`;
+    fs.writeFileSync(txtPath, text, 'utf8');
+    console.log(`✅ Texto guardado en: ${txtPath}`);
+
+    const chunks = chunkText(text);
     for (const chunk of chunks) {
       const embedding = await generateEmbedding(chunk);
       if (!embedding) continue;
@@ -109,7 +115,7 @@ export default async function uploadPdfHandler(req, res) {
       });
     }
 
-    fs.unlinkSync(tmpPath); // 🧹 Limpieza del archivo temporal
+    fs.unlinkSync(tmpPath); // 🧹 Limpieza del archivo temporal original
     return res.json({ success: true, filename: uniqueName });
   } catch (err) {
     console.error('🛑 Error:', err.response?.data || err.message);

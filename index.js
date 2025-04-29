@@ -49,7 +49,7 @@ app.post("/register", registerHandler);
 app.get("/get_pdfs", getPdfsHandler);
 app.post("/upload_pdf", upload.single("file"), uploadPdfHandler);
 app.post("/extract_pdf_text", extractTextHandler);
-
+app.use('/uploads', express.static('/tmp'));
 
 app.listen(port, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${port}`);
