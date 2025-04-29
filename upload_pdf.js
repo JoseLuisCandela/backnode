@@ -3,11 +3,11 @@ import fs from 'fs';
 import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 
 const SUPABASE_URL = 'https://jhutdencubufyjuvtnwx.supabase.co';
-const SUPABASE_API_KEY = process.env.SUPABASE_API_KEY; // Reemplaza con tu API key real
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY; // Reemplaza con tu API key real
+const SUPABASE_API_KEY = process.env.SUPABASE_API_KEY; // Clave de Supabase
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;     // Clave de Gemini
 const BUCKET_NAME = 'pdfs';
 
-// Función para trocear texto
+// 🔹 Troceo de texto en chunks
 function chunkText(text, maxTokens = 300) {
   const sentences = text.split(/(?<=[.?!])\s+/);
   const chunks = [];
@@ -26,7 +26,7 @@ function chunkText(text, maxTokens = 300) {
   return chunks;
 }
 
-// Función para generar embedding con Gemini
+// 🔹 Generación de embedding usando Gemini
 async function generateEmbedding(text) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/embedding-001:embedText?key=${GEMINI_API_KEY}`;
   try {
@@ -38,7 +38,7 @@ async function generateEmbedding(text) {
   }
 }
 
-// Manejador principal
+// 🔹 Manejador principal para subida de PDF
 export default async function uploadPdfHandler(req, res) {
   const userId = req.body.userId;
   const file = req.file;
@@ -49,13 +49,19 @@ export default async function uploadPdfHandler(req, res) {
 
   const original = file.originalname;
   const tmpPath = file.path;
-  const uniqueName = `${Date.now()}_${original}`;
+
+  // 🧼 Sanea el nombre para Storage
+  const safeName = original
+    .toLowerCase()
+    .replace(/\s+/g, '_')
+    .replace(/[^\w.-]/g, '');
+
+  const uniqueName = `${Date.now()}_${safeName}`;
 
   try {
-    // Leer PDF
     const fileBuffer = fs.readFileSync(tmpPath);
 
-    // Subir a Supabase Storage
+    // 🔺 Subida a Supabase Storage
     const uploadUrl = `${SUPABASE_URL}/storage/v1/object/${BUCKET_NAME}/${uniqueName}`;
     await axios.put(uploadUrl, fileBuffer, {
       headers: {
@@ -65,7 +71,7 @@ export default async function uploadPdfHandler(req, res) {
       }
     });
 
-    // Insertar metadata en tabla pdfs
+    // 📝 Registro en tabla pdfs
     await axios.post(`${SUPABASE_URL}/rest/v1/pdfs`, {
       filename: uniqueName,
       originalname: original,
@@ -79,7 +85,7 @@ export default async function uploadPdfHandler(req, res) {
       }
     });
 
-    // Extraer texto y procesar embeddings
+    // 🧠 Procesamiento del PDF y generación de embeddings
     const pdfData = await pdfParse(fileBuffer);
     const text = pdfData.text;
     const chunks = chunkText(text);
@@ -103,7 +109,7 @@ export default async function uploadPdfHandler(req, res) {
       });
     }
 
-    fs.unlinkSync(tmpPath); // Eliminar archivo temporal
+    fs.unlinkSync(tmpPath); // 🧹 Limpieza del archivo temporal
     return res.json({ success: true, filename: uniqueName });
   } catch (err) {
     console.error('🛑 Error:', err.response?.data || err.message);
