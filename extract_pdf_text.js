@@ -4,8 +4,6 @@ import fs from "fs";
 import path from "path";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import { supabaseRequest, SUPABASE_URL, SUPABASE_API_KEY } from "./db";
-import express from "express";
-import axios from "axios";
 
 
 
