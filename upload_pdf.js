@@ -30,25 +30,28 @@ function chunkText(text, maxTokens = 300) {
 }
 
 // 🔹 Generación de embedding usando Gemini
-const generateEmbedding = async (text) => {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/embedding-001:embedText?key=${GEMINI_API_KEY}`;
-  
+async function generateEmbedding(text) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-exp-03-07:embedContent?key=${GEMINI_API_KEY}`;
+
   try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text })
+    const response = await axios.post(url, {
+      model: 'models/gemini-embedding-exp-03-07',
+      content: {
+        parts: [{ text }]
+      }
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
     });
 
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error?.message || `Status: ${response.status}`);
-    
-    return data.embedding;
-  } catch (error) {
-    console.error("❌ Error en generateEmbedding Gemini:", error);
+    return response.data.embedding || null;
+  } catch (err) {
+    console.error('❌ Error en generateEmbedding Gemini:', err.message);
     return null;
   }
-};
+}
+
 
 // 🔹 Manejador principal para subida de PDF
 export default async function uploadPdfHandler(req, res) {
