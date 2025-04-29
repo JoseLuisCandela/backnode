@@ -1,26 +1,17 @@
-import express from "express";
 import axios from "axios";
-import fs from "fs";
-import path from "path";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import supabaseRequest from "./db.js";
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_API_KEY = process.env.SUPABASE_API_KEY;
 
-
-
-const app = express();
-app.use(express.json());
-
-app.get("/extract_pdf_text", async (req, res) => {
-  const pdfId = req.query.pdfId;
+const extractTextHandler = async (req, res) => {
+  const pdfId = req.body.pdfId;
 
   if (!pdfId) {
     return res.status(400).json({ error: "pdfId requerido" });
   }
 
-  // Obtener metadata del PDF desde Supabase
   const response = await supabaseRequest("GET", "pdfs", null, {
     id: `eq.${pdfId}`,
     limit: 1,
@@ -45,13 +36,9 @@ app.get("/extract_pdf_text", async (req, res) => {
     const data = await pdfParse(pdfBuffer.data);
     res.json({ text: data.text });
   } catch (error) {
-    console.error("Error descargando o procesando PDF:", error.message);
+    console.error("Error procesando el PDF:", error.message);
     res.status(500).json({ error: "No se pudo procesar el PDF" });
   }
-});
+};
 
-// Puerto para local o deploy
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
+export default extractTextHandler;
