@@ -9,13 +9,15 @@ const BUCKET_NAME = 'pdfs';
 
 // 🔹 Troceo de texto en chunks
 function chunkText(text, maxTokens = 300) {
-  const sentences = text.split(/(?<=[.?!])\s+/);
+  const sentences = text.split(/(?<=[.?!])\s+/); // separa por puntos, signos
   const chunks = [];
   let current = '';
 
   for (const sentence of sentences) {
-    if ((current + sentence).split(/\s+/).length > maxTokens) {
-      chunks.push(current.trim());
+    const sentenceLength = sentence.trim().split(/\s+/).length;
+
+    if ((current + ' ' + sentence).trim().split(/\s+/).length > maxTokens) {
+      if (current.trim()) chunks.push(current.trim());
       current = sentence;
     } else {
       current += ' ' + sentence;
@@ -23,20 +25,30 @@ function chunkText(text, maxTokens = 300) {
   }
 
   if (current.trim()) chunks.push(current.trim());
+
   return chunks;
 }
 
 // 🔹 Generación de embedding usando Gemini
-async function generateEmbedding(text) {
+const generateEmbedding = async (text) => {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/embedding-001:embedText?key=${GEMINI_API_KEY}`;
+  
   try {
-    const response = await axios.post(url, { text });
-    return response.data.embedding || null;
-  } catch (err) {
-    console.error('Error en Gemini:', err.message);
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text })
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error?.message || `Status: ${response.status}`);
+    
+    return data.embedding;
+  } catch (error) {
+    console.error("❌ Error en generateEmbedding Gemini:", error);
     return null;
   }
-}
+};
 
 // 🔹 Manejador principal para subida de PDF
 export default async function uploadPdfHandler(req, res) {
