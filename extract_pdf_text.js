@@ -1,5 +1,4 @@
 import axios from "axios";
-import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import supabaseRequest from "./db.js";
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
@@ -12,6 +11,7 @@ const extractTextHandler = async (req, res) => {
     return res.status(400).json({ error: "pdfId requerido" });
   }
 
+  // Obtener info del PDF desde tabla 'pdfs'
   const response = await supabaseRequest("GET", "pdfs", null, {
     id: `eq.${pdfId}`,
     limit: 1,
@@ -22,22 +22,21 @@ const extractTextHandler = async (req, res) => {
   }
 
   const filename = response.data[0].filename;
+  const txtFilename = filename.replace('.pdf', '') + '.txt';
   const bucket = "pdfs";
-  const storageUrl = `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${filename}`;
+  const txtUrl = `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${txtFilename}`;
 
   try {
-    const pdfBuffer = await axios.get(storageUrl, {
+    const txtResponse = await axios.get(txtUrl, {
       headers: {
         Authorization: `Bearer ${SUPABASE_API_KEY}`,
-      },
-      responseType: "arraybuffer",
+      }
     });
 
-    const data = await pdfParse(pdfBuffer.data);
-    res.json({ text: data.text });
+    res.json({ text: txtResponse.data });
   } catch (error) {
-    console.error("Error procesando el PDF:", error.message);
-    res.status(500).json({ error: "No se pudo procesar el PDF" });
+    console.error("❌ Error leyendo el .txt:", error.message);
+    res.status(500).json({ error: "No se pudo leer el archivo .txt" });
   }
 };
 
