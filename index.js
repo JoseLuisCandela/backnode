@@ -13,7 +13,7 @@ import getConversationsHandler from "./get_conversations.js";
 import saveConversationHandler from "./save_convesation.js";
 import deleteConversationHandler from "./delete_conversation.js";
 import getPdfsHandler from "./get_pdfs.js";
-import extractTextHandler from "./extract_text.js";
+import extractTextHandler from "./extract_pdf_text.js";
 
 
 dotenv.config();
@@ -46,7 +46,7 @@ app.post("/register", registerHandler);
 //pdfs
 app.get("/get_pdfs", getPdfsHandler);
 app.post("/upload_pdf", upload.single("file"), uploadPdfHandler);
-app.post("/extract_text", extractTextHandler);
+app.post("/extract_pdf_text", extractTextHandler);
 
 
 app.listen(port, () => {
