@@ -3,19 +3,18 @@ import fs from 'fs';
 import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 
 const SUPABASE_URL = 'https://jhutdencubufyjuvtnwx.supabase.co';
-const SUPABASE_API_KEY = process.env.SUPABASE_API_KEY; // Clave de Supabase
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;     // Clave de Gemini
+const SUPABASE_API_KEY = process.env.SUPABASE_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const BUCKET_NAME = 'pdfs';
 
 // 🔹 Troceo de texto en chunks
 function chunkText(text, maxTokens = 300) {
-  const sentences = text.split(/(?<=[.?!])\s+/); // separa por puntos, signos
+  const sentences = text.split(/(?<=[.?!])\s+/);
   const chunks = [];
   let current = '';
 
   for (const sentence of sentences) {
     const sentenceLength = sentence.trim().split(/\s+/).length;
-
     if ((current + ' ' + sentence).trim().split(/\s+/).length > maxTokens) {
       if (current.trim()) chunks.push(current.trim());
       current = sentence;
@@ -25,7 +24,6 @@ function chunkText(text, maxTokens = 300) {
   }
 
   if (current.trim()) chunks.push(current.trim());
-
   return chunks;
 }
 
@@ -52,7 +50,6 @@ async function generateEmbedding(text) {
   }
 }
 
-
 // 🔹 Manejador principal para subida de PDF
 export default async function uploadPdfHandler(req, res) {
   const userId = req.body.userId;
@@ -65,9 +62,7 @@ export default async function uploadPdfHandler(req, res) {
   const original = file.originalname;
   const tmpPath = file.path;
 
-  // 🧼 Sanea el nombre para Storage
-  const safeName = original
-    .toLowerCase()
+  const safeName = original.toLowerCase()
     .replace(/\s+/g, '_')
     .replace(/[^\w.-]/g, '');
 
@@ -110,28 +105,29 @@ export default async function uploadPdfHandler(req, res) {
     fs.writeFileSync(txtPath, text, 'utf8');
     console.log(`✅ Texto guardado en: ${txtPath}`);
 
-    // Subir el texto del PDF como .txt a Supabase Storage
-const txtBuffer = Buffer.from(text, 'utf8');
-const txtUploadUrl = `${SUPABASE_URL}/storage/v1/object/${BUCKET_NAME}/${txtFilename}`;
+    // Subida del .txt a Supabase Storage
+    const txtBuffer = Buffer.from(text, 'utf8');
+    const txtUploadUrl = `${SUPABASE_URL}/storage/v1/object/${BUCKET_NAME}/${txtFilename}`;
+    await axios.put(txtUploadUrl, txtBuffer, {
+      headers: {
+        Authorization: `Bearer ${SUPABASE_API_KEY}`,
+        'Content-Type': 'text/plain',
+        'x-upsert': 'true'
+      }
+    });
 
-await axios.put(txtUploadUrl, txtBuffer, {
-  headers: {
-    Authorization: `Bearer ${SUPABASE_API_KEY}`,
-    'Content-Type': 'text/plain',
-    'x-upsert': 'true'
-  }
-});
-
+    // 🧩 Embeddings por chunk
     const chunks = chunkText(text);
     for (const chunk of chunks) {
       const embedding = await generateEmbedding(chunk);
       if (!embedding) continue;
 
+      // ✅ Formato correcto del vector para Supabase REST API
       await axios.post(`${SUPABASE_URL}/rest/v1/pdf_chunks`, {
         filename: uniqueName,
         user_id: parseInt(userId),
         chunk_text: chunk,
-        embedding: embedding
+        embedding: `[${embedding.join(',')}]` // <- IMPORTANTE: como string
       }, {
         headers: {
           apikey: SUPABASE_API_KEY,
