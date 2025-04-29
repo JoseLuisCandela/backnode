@@ -3,6 +3,7 @@ import cors from "cors";
 import multer from "multer";
 import dotenv from "dotenv";
 
+
 // Rutas
 import uploadPdfHandler from "./upload_pdf.js";
 import renameChatHandler from "./rename_chat.js";
@@ -26,7 +27,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Multer para subir archivos PDF
-const upload = multer({ dest: "uploads/" });
+
+const upload = multer({ dest: '/tmp/' }); // 
 
 // Ruta raíz
 app.get("/", (_, res) => {
