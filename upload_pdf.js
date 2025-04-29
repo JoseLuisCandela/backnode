@@ -6,8 +6,8 @@ import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 const upload = multer({ dest: 'tmp/' });
 
 const SUPABASE_URL = 'https://jhutdencubufyjuvtnwx.supabase.co';
-const SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR...'; // tu clave
-const GEMINI_API_KEY = 'AIzaSyAbHrkEBJ0Gebu...'; // tu clave
+const SUPABASE_API_KEY = process.env.SUPABASE_URL; // tu clave
+const GEMINI_API_KEY = process.env.SUPABASE_API_KEY; // tu clave
 
 function chunkText(text, maxTokens = 300) {
   const sentences = text.split(/(?<=[.?!])\s+/);
