@@ -33,16 +33,18 @@ app.get("/", (_, res) => {
 });
 
 // Rutas
-app.post("/upload_pdf", upload.single("file"), uploadPdfHandler);
+//chat
 app.patch("/rename_chat", renameChatHandler);
 app.post("/update_conversation", updateConversationHandler);
-app.post("/login", loginHandler);
-app.post("/register", registerHandler);
 app.get("/get_conversations", getConversationsHandler);
 app.post("/save_conversation", saveConversationHandler);
 app.delete("/delete_conversation", deleteConversationHandler);
+//login
+app.post("/login", loginHandler);
+app.post("/register", registerHandler);
+//pdfs
 app.get("/get_pdfs", getPdfsHandler);
-
+app.post("/upload_pdf", upload.single("file"), uploadPdfHandler);
 
 app.listen(port, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${port}`);

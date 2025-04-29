@@ -43,7 +43,7 @@ async function supabaseRequest(method, endpoint, data = null, query = null) {
 }
 
 // Endpoint para obtener los PDFs de un usuario
-app.get("/get-pdfs", async (req, res) => {
+app.get("/get_pdfs", async (req, res) => {
   const { userId } = req.query;
 
   if (!userId) {
