@@ -43,7 +43,7 @@ async function generateEmbedding(text) {
       }
     });
 
-    return response.data.embedding || null;
+    return response.data.embedding?.values || null;
   } catch (err) {
     console.error('❌ Error en generateEmbedding Gemini:', err.message);
     return null;
@@ -122,12 +122,11 @@ export default async function uploadPdfHandler(req, res) {
       const embedding = await generateEmbedding(chunk);
       if (!embedding) continue;
 
-      // ✅ Formato correcto del vector para Supabase REST API
       await axios.post(`${SUPABASE_URL}/rest/v1/pdf_chunks`, {
         filename: uniqueName,
         user_id: parseInt(userId),
         chunk_text: chunk,
-        embedding: `[${embedding.join(',')}]` // <- IMPORTANTE: como string
+        embedding: `[${embedding.join(',')}]`
       }, {
         headers: {
           apikey: SUPABASE_API_KEY,
@@ -138,7 +137,7 @@ export default async function uploadPdfHandler(req, res) {
       });
     }
 
-    fs.unlinkSync(tmpPath); // 🧹 Limpieza del archivo temporal original
+    fs.unlinkSync(tmpPath);
     return res.json({ success: true, filename: uniqueName });
   } catch (err) {
     console.error('🛑 Error:', err.response?.data || err.message);
