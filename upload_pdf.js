@@ -110,6 +110,18 @@ export default async function uploadPdfHandler(req, res) {
     fs.writeFileSync(txtPath, text, 'utf8');
     console.log(`✅ Texto guardado en: ${txtPath}`);
 
+    // Subir el texto del PDF como .txt a Supabase Storage
+const txtBuffer = Buffer.from(text, 'utf8');
+const txtUploadUrl = `${SUPABASE_URL}/storage/v1/object/${BUCKET_NAME}/${txtFilename}`;
+
+await axios.put(txtUploadUrl, txtBuffer, {
+  headers: {
+    Authorization: `Bearer ${SUPABASE_API_KEY}`,
+    'Content-Type': 'text/plain',
+    'x-upsert': 'true'
+  }
+});
+
     const chunks = chunkText(text);
     for (const chunk of chunks) {
       const embedding = await generateEmbedding(chunk);
