@@ -3,7 +3,10 @@ import axios from "axios";
 import fs from "fs";
 import path from "path";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
-import { supabaseRequest, SUPABASE_URL, SUPABASE_API_KEY } from "./db";
+import supabaseRequest from "./db.js";
+
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_API_KEY = process.env.SUPABASE_API_KEY;
 
 
 
